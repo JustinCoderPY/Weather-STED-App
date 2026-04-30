@@ -42,6 +42,12 @@ export const deleteLocation = (id) =>
     method: "DELETE"
   });
 
+export const updateLocation = (id, patch) =>
+  request(`/api/locations/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    body: JSON.stringify(patch)
+  });
+
 export const searchLocations = (query) =>
   request(`/api/geocode/search?query=${encodeURIComponent(query)}`);
 

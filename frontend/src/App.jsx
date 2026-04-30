@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { addLocation, deleteLocation, getDashboard, searchLocations, updateSettings } from "./api/weatherApi.js";
+import { addLocation, deleteLocation, getDashboard, searchLocations, updateLocation, updateSettings } from "./api/weatherApi.js";
 import { Background } from "./components/Backgrounds.jsx";
 import { Icon } from "./components/Icons.jsx";
 import LocationConsentScreen from "./screens/LocationConsentScreen.jsx";
@@ -143,14 +143,6 @@ const weatherIconFor = (condition = "") => {
   return <Icon.Cloud width="18" height="18" />;
 };
 
-function IconButton({ icon, label, onClick, ghost = false }) {
-  return (
-    <button className={ghost ? "icon-btn icon-btn--ghost" : "icon-btn"} aria-label={label} type="button" onClick={onClick}>
-      {icon}
-    </button>
-  );
-}
-
 function BottomBar({ activeSheet, onOpenSheet }) {
   return (
     <nav className="bottombar" aria-label="Primary navigation">
@@ -281,7 +273,7 @@ function FiveDay({ days }) {
   );
 }
 
-function SavedLocationsSheet({ currentId, error, locations, onAddLocation, onClose, onDelete, onPick }) {
+function SavedLocationsSheet({ currentId, error, locations, onAddLocation, onClose, onDelete, onPick, onUpdateLocationType }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [locationType, setLocationType] = useState("city");
@@ -315,6 +307,17 @@ function SavedLocationsSheet({ currentId, error, locations, onAddLocation, onClo
       setQuery("");
     } catch (saveError) {
       setMessage(saveError.message);
+    }
+  };
+
+  const handleLocationTypeChange = async (place, nextLocationType) => {
+    const locationTypeValue = normalizeLocationType(nextLocationType);
+    setMessage("");
+
+    try {
+      await onUpdateLocationType(place.id, locationTypeValue);
+    } catch (updateError) {
+      setMessage(updateError.message);
     }
   };
 
@@ -354,6 +357,17 @@ function SavedLocationsSheet({ currentId, error, locations, onAddLocation, onClo
             <span className="savecard__name">{place.name}</span>
             <span className="savecard__sub"><Icon.Pin width="12" height="12" />{place.state || place.country} · {place.locationType || "city"} · {place.condition || "Saved"}</span>
           </button>
+          <label className="sr-only" htmlFor={`location-type-${place.id}`}>Environment type for {place.name}</label>
+          <select
+            id={`location-type-${place.id}`}
+            className="savecard__type"
+            value={normalizeLocationType(place.locationType)}
+            onChange={(event) => handleLocationTypeChange(place, event.target.value)}
+          >
+            {LOCATION_TYPES.map((type) => (
+              <option key={type.value} value={type.value}>{type.label}</option>
+            ))}
+          </select>
           <div className="savecard__temp">{place.temperature ? `${asTemp(place.temperature)}°` : ""}</div>
           <button className="savecard__del" type="button" aria-label={`Delete ${place.name}`} onClick={() => onDelete(place.id)}>
             <Icon.Trash width="16" height="16" />
@@ -418,7 +432,7 @@ function SettingsSheet({ onChange, onClose, onLogout, settings }) {
   );
 }
 
-function DashboardScreen({ dashboard, error, isLoading, onAddLocation, onDeleteLocation, onLogout, onSelectLocation, onUpdateSettings }) {
+function DashboardScreen({ dashboard, error, isLoading, onAddLocation, onDeleteLocation, onLogout, onSelectLocation, onUpdateLocationType, onUpdateSettings }) {
   const [activeSheet, setActiveSheet] = useState(null);
   const weather = normalizeWeather(dashboard.weather, dashboard.selectedLocation);
   const settings = dashboard.settings || mockSettings;
@@ -444,12 +458,13 @@ function DashboardScreen({ dashboard, error, isLoading, onAddLocation, onDeleteL
   return (
     <main className="app-shell">
       <section className="app-surface" aria-label="Tonal weather app">
-        <Background location={backgroundLocation} time={backgroundTime} weather={backgroundWeather} />
+        <Background
+          key={`${backgroundLocation}-${backgroundTime}-${backgroundWeather}`}
+          location={backgroundLocation}
+          time={backgroundTime}
+          weather={backgroundWeather}
+        />
         <div className="dashboard-scroll">
-          <div className="dashboard-top">
-            <IconButton label="Saved places" icon={<Icon.Pin width="20" height="20" />} onClick={() => setActiveSheet("saved")} />
-            <IconButton label="Settings" icon={<Icon.Menu width="20" height="20" />} onClick={() => setActiveSheet("settings")} />
-          </div>
           {isLoading && <div className="status-chip">Refreshing weather</div>}
           {error && <div className="status-chip status-chip--error">{error}</div>}
           {!dashboard.selectedLocation && (
@@ -503,6 +518,7 @@ function DashboardScreen({ dashboard, error, isLoading, onAddLocation, onDeleteL
               await onSelectLocation(id);
               setActiveSheet(null);
             }}
+            onUpdateLocationType={onUpdateLocationType}
           />
         )}
         {activeSheet === "settings" && (
@@ -609,6 +625,45 @@ export default function App() {
     }
   };
 
+  const handleUpdateLocationType = async (id, locationType) => {
+    try {
+      setError("");
+      const normalizedLocationType = normalizeLocationType(locationType);
+      const response = await updateLocation(id, {
+        locationType: normalizedLocationType
+      });
+
+      setDashboard((current) => {
+        const savedLocations = (current.savedLocations || []).map((location) =>
+          location.id === id ? response.location : location
+        );
+        const isSelected = current.selectedLocation?.id === id;
+
+        return {
+          ...current,
+          savedLocations,
+          selectedLocation: isSelected ? response.location : current.selectedLocation,
+          weather: isSelected
+            ? {
+                ...current.weather,
+                location: {
+                  ...current.weather?.location,
+                  locationType: response.location.locationType
+                }
+              }
+            : current.weather
+        };
+      });
+
+      if (dashboard.selectedLocation?.id === id || selectedLocationId === id) {
+        await loadDashboard(id);
+      }
+    } catch (actionError) {
+      setError(actionError.message);
+      throw actionError;
+    }
+  };
+
   const handleUpdateSettings = async (patch) => {
     try {
       setError("");
@@ -657,6 +712,7 @@ export default function App() {
       onDeleteLocation={handleDeleteLocation}
       onLogout={handleLogout}
       onSelectLocation={handleSelectLocation}
+      onUpdateLocationType={handleUpdateLocationType}
       onUpdateSettings={handleUpdateSettings}
     />
   );

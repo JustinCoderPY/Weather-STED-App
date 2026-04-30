@@ -1,5 +1,8 @@
 const locationStoreService = require("../services/locationStore.service");
-const { validateSavedLocation } = require("../utils/validators");
+const {
+  validateSavedLocation,
+  validateSavedLocationPatch
+} = require("../utils/validators");
 
 const getLocations = async (req, res, next) => {
   try {
@@ -25,6 +28,22 @@ const addLocation = async (req, res, next) => {
   }
 };
 
+const updateLocation = async (req, res, next) => {
+  try {
+    const locationPatch = validateSavedLocationPatch(req.body);
+    const location = await locationStoreService.updateLocation(
+      req.params.id,
+      locationPatch
+    );
+
+    res.json({
+      location
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const deleteLocation = async (req, res, next) => {
   try {
     await locationStoreService.deleteLocation(req.params.id);
@@ -40,5 +59,6 @@ const deleteLocation = async (req, res, next) => {
 module.exports = {
   getLocations,
   addLocation,
+  updateLocation,
   deleteLocation
 };

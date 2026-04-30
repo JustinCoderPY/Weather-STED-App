@@ -88,6 +88,20 @@ const validateSavedLocation = (location = {}) => {
   };
 };
 
+const validateSavedLocationPatch = (location = {}) => {
+  const patch = {};
+
+  if (Object.prototype.hasOwnProperty.call(location, "locationType")) {
+    patch.locationType = validateLocationType(location.locationType);
+  }
+
+  if (!Object.keys(patch).length) {
+    throw createValidationError("At least one location field is required.");
+  }
+
+  return patch;
+};
+
 const validateSettingsPatch = (settings = {}) => {
   const patch = {};
 
@@ -152,5 +166,6 @@ module.exports = {
   validateQuery,
   validateUnits,
   validateSavedLocation,
+  validateSavedLocationPatch,
   validateSettingsPatch
 };

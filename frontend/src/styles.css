@@ -251,14 +251,6 @@ input:focus-visible {
   padding: 26px 16px 104px;
 }
 
-.dashboard-top {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 0 12px;
-}
-
 .hero {
   position: relative;
   z-index: 2;
@@ -721,7 +713,7 @@ input:focus-visible {
 
 .savecard {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto auto auto;
   align-items: center;
   gap: 14px;
   margin-bottom: 10px;
@@ -770,6 +762,17 @@ input:focus-visible {
   font-family: var(--font-display);
   font-size: 36px;
   line-height: 1;
+}
+
+.savecard__type {
+  min-height: 36px;
+  border: 1px solid rgba(28, 20, 16, 0.08);
+  border-radius: var(--r-pill);
+  background: rgba(255, 252, 245, 0.75);
+  color: var(--ink-700);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 26px 0 12px;
 }
 
 .savecard__del,
@@ -1150,19 +1153,14 @@ input:focus-visible {
     padding: 34px 34px 112px;
   }
 
-  .dashboard-top,
   .status-chip,
   .empty-location {
     grid-column: 1 / -1;
   }
 
-  .dashboard-top {
-    padding-bottom: 6px;
-  }
-
   .hero {
     grid-column: 1;
-    grid-row: 2 / span 6;
+    grid-row: 1 / span 6;
     position: sticky;
     top: 28px;
     width: 100%;
@@ -1173,7 +1171,7 @@ input:focus-visible {
 
   .detail-row {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 1;
     width: 100%;
     margin: 84px 0 0;
     padding: 16px;
@@ -1249,5 +1247,27 @@ input:focus-visible {
 @media (max-width: 640px) {
   .hero__temp {
     font-size: 154px;
+  }
+}
+
+@media (max-width: 520px) {
+  .savecard {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 12px;
+  }
+
+  .savecard__body {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .savecard__type {
+    grid-column: 1;
+    width: 100%;
+  }
+
+  .savecard__temp,
+  .savecard__del {
+    grid-column: 2;
   }
 }

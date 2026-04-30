@@ -51,6 +51,28 @@ const addLocation = async (locationInput) => {
   return location;
 };
 
+const updateLocation = async (id, locationPatch) => {
+  const locations = await readLocations();
+  const locationIndex = locations.findIndex((location) => location.id === id);
+
+  if (locationIndex === -1) {
+    const error = new Error("Saved location not found.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const location = normalizeLocation({
+    ...locations[locationIndex],
+    ...locationPatch,
+    updatedAt: new Date().toISOString()
+  });
+
+  locations[locationIndex] = location;
+  await writeLocations(locations);
+
+  return location;
+};
+
 const deleteLocation = async (id) => {
   const locations = await readLocations();
   const nextLocations = locations.filter((location) => location.id !== id);
@@ -67,5 +89,6 @@ const deleteLocation = async (id) => {
 module.exports = {
   getLocations,
   addLocation,
+  updateLocation,
   deleteLocation
 };
