@@ -409,7 +409,7 @@ function SettingsSheet({ onChange, onClose, onLogout, settings }) {
         <div className="setrow__icon"><Icon.User width="18" height="18" /></div>
         <div>
           <div className="setrow__label">Account</div>
-          <div className="setrow__sub">Local prototype session</div>
+          <div className="setrow__sub">Manage your Tonal profile</div>
         </div>
         <Icon.ChevR width="18" height="18" />
       </button>

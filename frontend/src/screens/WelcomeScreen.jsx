@@ -14,7 +14,6 @@ export default function WelcomeScreen({ onContinue, onSignIn }) {
       <div className="onboarding-actions">
         <button className="btn btn--primary" type="button" onClick={onContinue}>Create your account</button>
         <button className="btn btn--ghost" type="button" onClick={onSignIn}>I already have an account</button>
-        <div className="onboarding-version">v1.0 poster mode</div>
       </div>
     </section>
     </main>

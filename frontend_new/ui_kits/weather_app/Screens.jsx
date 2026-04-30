@@ -22,7 +22,6 @@ function WelcomeScreen({ onContinue }) {
       <div className="onboarding-actions">
         <Button kind="primary" onClick={onContinue}>Get started</Button>
         <Button kind="ghost">I already have an account</Button>
-        <div className="onboarding-version">v1.0 · poster mode</div>
       </div>
     </Phone>
   );

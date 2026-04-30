@@ -742,15 +742,6 @@ button { cursor: pointer; }
   display: grid;
   gap: 12px;
 }
-.onboarding-version {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-500);
-}
-
 /* Auth screens (sign in / up) */
 .auth {
   position: relative;
