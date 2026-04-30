@@ -276,7 +276,6 @@ function FiveDay({ days }) {
 function SavedLocationsSheet({ currentId, error, locations, onAddLocation, onClose, onDelete, onPick, onUpdateLocationType }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-  const [locationType, setLocationType] = useState("city");
   const [isSearching, setIsSearching] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -301,7 +300,7 @@ function SavedLocationsSheet({ currentId, error, locations, onAddLocation, onClo
     try {
       await onAddLocation({
         ...result,
-        locationType
+        locationType: "city"
       });
       setResults([]);
       setQuery("");
@@ -328,18 +327,6 @@ function SavedLocationsSheet({ currentId, error, locations, onAddLocation, onClo
         <input id="place-query" className="input" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search city" />
         <button className="btn btn--ghost" type="submit"><Icon.Search width="18" height="18" /> {isSearching ? "Searching" : "Search"}</button>
       </form>
-      <div className="location-type-picker" aria-label="Environment type">
-        {LOCATION_TYPES.map((type) => (
-          <button
-            key={type.value}
-            type="button"
-            className={locationType === type.value ? "is-on" : ""}
-            onClick={() => setLocationType(type.value)}
-          >
-            {type.label}
-          </button>
-        ))}
-      </div>
       {message && <p className="sheet-message">{message}</p>}
       {error && <p className="sheet-message sheet-message--error">{error}</p>}
       {results.map((result) => (

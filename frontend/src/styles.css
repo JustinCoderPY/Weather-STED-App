@@ -685,32 +685,6 @@ input:focus-visible {
   margin-bottom: 12px;
 }
 
-.location-type-picker {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
-  margin: 0 0 12px;
-  border-radius: var(--r-pill);
-  background: var(--paper-100);
-  padding: 4px;
-}
-
-.location-type-picker button {
-  min-height: 38px;
-  border: 0;
-  border-radius: var(--r-pill);
-  background: transparent;
-  color: var(--ink-500);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 0 8px;
-}
-
-.location-type-picker button.is-on {
-  background: var(--ink-900);
-  color: var(--paper-50);
-}
-
 .savecard {
   display: grid;
   grid-template-columns: 1fr auto auto auto;
