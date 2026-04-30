@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin:0; padding:24px; background:linear-gradient(180deg,#c17244,#a05430); font-family:var(--font-ui); color:#fff8e9; }
+  .head { display:flex; justify-content:space-between; align-items:center; margin:0 4px 12px; }
+  .title { font-family:var(--font-display); font-size:18px; }
+  .hint  { font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; opacity:0.75; }
+  .scroll { display:flex; gap:14px; }
+  .h { flex:0 0 auto; width:64px; display:grid; gap:8px; justify-items:center; padding:6px 0; }
+  .h.now { background:rgba(255,248,235,0.16); border:1px solid rgba(255,248,235,0.32); border-radius:18px; width:72px; padding:8px 0; }
+  .h time { font-size:13px; opacity:0.9; font-style:normal; }
+  .h .dot { width:14px; height:14px; border-radius:999px; }
+  .h .temp { font-family:var(--font-display); font-size:22px; line-height:1; }
+</style></head><body>
+<div class="head"><span class="title">Hourly</span><span class="hint">Swipe ›</span></div>
+<div class="scroll">
+  <div class="h now"><time>Now</time><div class="dot" style="background:#ffd47a"></div><div class="temp">52°</div></div>
+  <div class="h"><time>10 PM</time><div class="dot" style="background:#f2c46c"></div><div class="temp">50°</div></div>
+  <div class="h"><time>11 PM</time><div class="dot" style="background:#f2c46c"></div><div class="temp">49°</div></div>
+  <div class="h"><time>12 AM</time><div class="dot" style="background:#c9deec"></div><div class="temp">48°</div></div>
+  <div class="h"><time>1 AM</time><div class="dot" style="background:#c9deec"></div><div class="temp">47°</div></div>
+  <div class="h"><time>2 AM</time><div class="dot" style="background:#c9deec"></div><div class="temp">46°</div></div>
+</div>
+</body></html>

@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "id": "1777563949440-9t2vo0x6",
+    "name": "Newark",
+    "state": "New Jersey",
+    "country": "US",
+    "lat": 40.7357,
+    "lon": -74.1724,
+    "locationType": "city",
+    "createdAt": "2026-04-30T15:45:49.440Z"
+  },
+  {
+    "id": "1777563950485-7sg3qrjp",
+    "name": "Montclair",
+    "state": "New Jersey",
+    "country": "US",
+    "lat": 40.8259,
+    "lon": -74.209,
+    "locationType": "suburb",
+    "createdAt": "2026-04-30T15:45:50.485Z"
+  },
+  {
+    "id": "1777564401089-vsncofep",
+    "name": "New York",
+    "state": "New York",
+    "country": "US",
+    "lat": 40.7127281,
+    "lon": -74.0060152,
+    "locationType": "city",
+    "createdAt": "2026-04-30T15:53:21.089Z"
+  },
+  {
+    "id": "1777564420385-9orcaztd",
+    "name": "Hillside",
+    "state": "New Jersey",
+    "country": "US",
+    "lat": 40.701213,
+    "lon": -74.2301459,
+    "locationType": "city",
+    "createdAt": "2026-04-30T15:53:40.385Z"
+  }
+]

@@ -1,0 +1,19 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { margin:0; padding:0; background:linear-gradient(180deg,#f7c98a 0%,#f4a06a 60%,#e0735a 100%); font-family:var(--font-ui); height:300px; display:grid; place-items:center; overflow:hidden; position:relative; }
+  body::before { content:""; position:absolute; left:50%; top:60%; width:280px; height:280px; border-radius:50%; background:radial-gradient(circle, rgba(253,231,196,0.6), transparent 60%); transform:translate(-50%, -50%); }
+  .stack { position:relative; text-align:center; z-index:2; }
+  .loc { display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:#3a2a22; }
+  .date { margin:8px 0 8px; color:#3a2a22; font-size:13px; font-weight:500; }
+  .temp { font-family:var(--font-display); font-size:160px; line-height:0.86; color:#1c1410; letter-spacing:-0.04em; }
+  .temp sup { font-size:0.32em; vertical-align:super; }
+  .summary { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:999px; background:rgba(255,248,235,0.78); color:#1c1410; font-size:13px; font-weight:600; margin-top:8px; }
+</style></head><body>
+<div class="stack">
+  <div class="loc">📍 Newark, New Jersey</div>
+  <div class="date">Today · Thursday, April 30</div>
+  <div class="temp">52<sup>°</sup></div>
+  <div class="summary">Overcast Clouds</div>
+</div>
+</body></html>

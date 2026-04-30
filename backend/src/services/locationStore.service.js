@@ -3,9 +3,15 @@ const path = require("path");
 
 const dataPath = path.join(__dirname, "../data/savedLocations.json");
 
+const normalizeLocation = (location) => ({
+  ...location,
+  state: location.state || null,
+  locationType: location.locationType || "city"
+});
+
 const readLocations = async () => {
   const file = await fs.readFile(dataPath, "utf8");
-  return JSON.parse(file);
+  return JSON.parse(file).map(normalizeLocation);
 };
 
 const writeLocations = async (locations) => {
@@ -35,6 +41,7 @@ const addLocation = async (locationInput) => {
     country: locationInput.country,
     lat: locationInput.lat,
     lon: locationInput.lon,
+    locationType: locationInput.locationType || "city",
     createdAt: new Date().toISOString()
   };
 

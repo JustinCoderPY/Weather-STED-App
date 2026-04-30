@@ -51,11 +51,25 @@ const validateUnits = (units = "imperial") => {
   return cleanUnits;
 };
 
+const validateLocationType = (locationType = "city") => {
+  const cleanLocationType = String(locationType || "city").trim().toLowerCase();
+  const allowedLocationTypes = ["city", "suburb", "rural", "park"];
+
+  if (!allowedLocationTypes.includes(cleanLocationType)) {
+    throw createValidationError(
+      "Location type must be one of: city, suburb, rural, park."
+    );
+  }
+
+  return cleanLocationType;
+};
+
 const validateSavedLocation = (location = {}) => {
   const name = location.name ? String(location.name).trim() : "";
   const state = location.state ? String(location.state).trim() : "";
   const country = location.country ? String(location.country).trim() : "";
   const coordinates = validateCoordinates(location);
+  const locationType = validateLocationType(location.locationType);
 
   if (!name) {
     throw createValidationError("Location name is required.");
@@ -69,6 +83,7 @@ const validateSavedLocation = (location = {}) => {
     name,
     state: state || null,
     country,
+    locationType,
     ...coordinates
   };
 };
@@ -133,6 +148,7 @@ const validateSettingsPatch = (settings = {}) => {
 
 module.exports = {
   validateCoordinates,
+  validateLocationType,
   validateQuery,
   validateUnits,
   validateSavedLocation,

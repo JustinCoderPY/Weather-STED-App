@@ -28,22 +28,28 @@ const formatGeocodeResults = (results = []) =>
 
 const formatCurrentWeather = (weather, coordinates, meta = {}) => {
   const timezoneOffset = weather.timezone || 0;
+  const tempLow = weather.main?.temp_min;
+  const tempHigh = weather.main?.temp_max;
 
   return {
     location: {
       id: weather.id,
       name: weather.name || null,
+      state: null,
       country: weather.sys?.country || null,
       lat: weather.coord?.lat ?? coordinates.lat,
       lon: weather.coord?.lon ?? coordinates.lon,
-      timezoneOffset
+      timezoneOffset,
+      locationType: "city"
     },
     current: {
       time: formatDateTime(weather.dt, timezoneOffset),
       temperature: weather.main?.temp,
       feelsLike: weather.main?.feels_like,
-      tempMin: weather.main?.temp_min,
-      tempMax: weather.main?.temp_max,
+      tempLow,
+      tempHigh,
+      tempMin: tempLow,
+      tempMax: tempHigh,
       condition: weather.weather?.[0]?.main || null,
       description: weather.weather?.[0]?.description || null,
       icon: weather.weather?.[0]?.icon || null,
@@ -109,10 +115,15 @@ const groupDailyForecast = (items = [], timezoneOffset = 0) => {
       .map((item) => item.pop)
       .filter((chance) => Number.isFinite(chance));
 
+    const tempLow = temperatures.length ? Math.min(...temperatures) : null;
+    const tempHigh = temperatures.length ? Math.max(...temperatures) : null;
+
     return {
       date,
-      tempMin: temperatures.length ? Math.min(...temperatures) : null,
-      tempMax: temperatures.length ? Math.max(...temperatures) : null,
+      tempLow,
+      tempHigh,
+      tempMin: tempLow,
+      tempMax: tempHigh,
       condition: representative?.weather?.[0]?.main || null,
       description: representative?.weather?.[0]?.description || null,
       icon: representative?.weather?.[0]?.icon || null,
@@ -139,10 +150,12 @@ const formatFullWeather = (
     location: {
       id: forecastWeather.city?.id ?? current.location.id,
       name: forecastWeather.city?.name ?? current.location.name,
+      state: null,
       country: forecastWeather.city?.country ?? current.location.country,
       lat: forecastWeather.city?.coord?.lat ?? current.location.lat,
       lon: forecastWeather.city?.coord?.lon ?? current.location.lon,
-      timezoneOffset
+      timezoneOffset,
+      locationType: "city"
     },
     current: current.current,
     hourly,

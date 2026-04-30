@@ -9,6 +9,20 @@ const buildNotFoundError = () => {
   return error;
 };
 
+const mergeSavedLocation = (weather, savedLocation) => ({
+  ...weather,
+  location: {
+    ...weather.location,
+    id: savedLocation.id,
+    name: savedLocation.name,
+    state: savedLocation.state || null,
+    country: savedLocation.country,
+    lat: savedLocation.lat,
+    lon: savedLocation.lon,
+    locationType: savedLocation.locationType || "city"
+  }
+});
+
 const getDashboard = async (req, res, next) => {
   try {
     const settings = await settingsStoreService.getSettings();
@@ -48,17 +62,20 @@ const getDashboard = async (req, res, next) => {
       })
     ]);
 
-    const weather = formatFullWeather(
-      currentWeatherResult.data,
-      forecastWeatherResult.data,
-      {
-        lat: selectedLocation.lat,
-        lon: selectedLocation.lon
-      },
-      {
-        units,
-        cached: currentWeatherResult.cached && forecastWeatherResult.cached
-      }
+    const weather = mergeSavedLocation(
+      formatFullWeather(
+        currentWeatherResult.data,
+        forecastWeatherResult.data,
+        {
+          lat: selectedLocation.lat,
+          lon: selectedLocation.lon
+        },
+        {
+          units,
+          cached: currentWeatherResult.cached && forecastWeatherResult.cached
+        }
+      ),
+      selectedLocation
     );
 
     res.json({

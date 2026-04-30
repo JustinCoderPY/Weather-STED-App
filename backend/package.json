@@ -1,7 +1,7 @@
 {
-  "name": "weather-sted-backend",
+  "name": "tonal-backend",
   "version": "1.0.0",
-  "description": "Express backend for the Weather STED app.",
+  "description": "Express backend for the Tonal weather app.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

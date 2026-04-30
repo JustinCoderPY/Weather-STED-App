@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tonal — UI Kit</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="Icons.jsx"></script>
+  <script type="text/babel" src="Backgrounds.jsx"></script>
+  <script src="mockWeather.js"></script>
+  <script type="text/babel" src="Components.jsx"></script>
+  <script type="text/babel" src="Screens.jsx"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+    const screens = [
+      { id: "dashboard", label: "Dashboard" },
+      { id: "welcome",   label: "Welcome" },
+      { id: "signup",    label: "Sign up" },
+      { id: "signin",    label: "Sign in" },
+      { id: "consent",   label: "Location" }
+    ];
+
+    function App() {
+      const [active, setActive] = useState("dashboard");
+      const [sheet, setSheet]   = useState(null);
+      const [settings, setSettings] = useState({
+        unit: "°f", system: "us", theme: "dynamic"
+      });
+
+      let body = null;
+      if (active === "dashboard") {
+        body = <DashboardScreen onSheet={setSheet} />;
+      } else if (active === "welcome") {
+        body = <WelcomeScreen onContinue={() => setActive("signup")} />;
+      } else if (active === "signup") {
+        body = <SignUpScreen onContinue={() => setActive("consent")} onSignIn={() => setActive("signin")} />;
+      } else if (active === "signin") {
+        body = <SignInScreen onContinue={() => setActive("dashboard")} onSignUp={() => setActive("signup")} />;
+      } else if (active === "consent") {
+        body = <LocationConsentScreen onAllow={() => setActive("dashboard")} onChoose={() => setActive("dashboard")} />;
+      }
+
+      return (
+        <div className="stage">
+          <nav className="preview-toolbar" aria-label="Screens">
+            {screens.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className={s.id === active ? "is-on" : ""}
+                onClick={() => { setActive(s.id); setSheet(null); }}
+              >
+                {s.label}
+              </button>
+            ))}
+          </nav>
+          <div style={{ position: "relative" }}>
+            {body}
+            {/* sheets — positioned within the most recent .phone via portal-ish trick */}
+            {active === "dashboard" && sheet === "saved" && (
+              <SheetMount>
+                <SavedLocations
+                  items={mockSavedLocations}
+                  currentId="newark-nj"
+                  onClose={() => setSheet(null)}
+                  onPick={() => setSheet(null)}
+                />
+              </SheetMount>
+            )}
+            {active === "dashboard" && sheet === "settings" && (
+              <SheetMount>
+                <Settings
+                  settings={settings}
+                  onChange={(k, v) => setSettings((s) => ({ ...s, [k]: v }))}
+                  onClose={() => setSheet(null)}
+                />
+              </SheetMount>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // Mounts a sheet inside the currently visible .phone element
+    function SheetMount({ children }) {
+      const [container, setContainer] = React.useState(null);
+      React.useEffect(() => {
+        const phones = document.querySelectorAll(".phone");
+        const last = phones[phones.length - 1];
+        setContainer(last || null);
+      }, []);
+      if (!container) return null;
+      return ReactDOM.createPortal(children, container);
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
